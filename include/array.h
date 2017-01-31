@@ -7,8 +7,8 @@ namespace containers {
 	template <class T> class array {
 	public:
 		array(size_t size = 0)
-		    : m_size(n)
-		    , m_data(m_size ? new T[n] : nullptr) {}
+		    : m_size(size)
+		    , m_data(size ? new T[size] : nullptr) {}
 
 		array(const T& other)
 		    : m_size(other.m_size)
@@ -32,9 +32,9 @@ namespace containers {
 		T& operator[](size_t index) { return *(m_data.get() + index); }
 
 	private:
-		std::unique_ptr<T> m_data;
 		size_t m_size;
-	}
+		std::unique_ptr<T> m_data;
+	};
 }
 
 #endif
