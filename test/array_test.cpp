@@ -3,35 +3,35 @@
 
 #include "array.h"
 
-BOOST_AUTO_TEST_CASE(default_constructor) {
+BOOST_AUTO_TEST_CASE(defaultConstructor) {
+	containers::array<int> zeroSize{};
+	BOOST_TEST(zeroSize.size() == 0);
+}
+
+BOOST_AUTO_TEST_CASE(sizeConstructor) {
 	size_t size = 10;
-	containers::array<int> zeroSize;
-	containers::array<int> smallSize(size);
+	containers::array<int> a{size};
+	BOOST_TEST(a.size() == size);
+}
 
+BOOST_AUTO_TEST_CASE(elementAccess) {
+	size_t size = 10;
+	containers::array<int> a{size};
 	for (int i = 0; i < size; i++) {
-		smallSize[i] = i;
+		a[i] = i;
 	}
 	for (int i = 0; i < size; i++) {
-		BOOST_TEST(smallSize[i] == i);
+		BOOST_TEST(a[i] == i);
 	}
 }
 
-BOOST_AUTO_TEST_CASE(dummy_test_1) {
-	BOOST_TEST(0 == 0);
-}
-
-BOOST_AUTO_TEST_CASE(dummy_test_2) {
-	BOOST_TEST(0 == 0);
-}
-
-BOOST_AUTO_TEST_CASE(dummy_test_3) {
-	BOOST_TEST(0 == 0);
-}
-
-BOOST_AUTO_TEST_CASE(dummy_test_4) {
-	BOOST_TEST(0 == 0);
-}
-
-BOOST_AUTO_TEST_CASE(dummy_test_5) {
-	BOOST_TEST(0 == 0);
+BOOST_AUTO_TEST_CASE(elementAccessAt) {
+	size_t size = 10;
+	containers::array<int> a{size};
+	for (int i = 0; i < size; i++) {
+		a.at(i) = i;
+	}
+	for (int i = 0; i < size; i++) {
+		BOOST_TEST(a.at(i) == i);
+	}
 }
