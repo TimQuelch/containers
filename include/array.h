@@ -30,6 +30,11 @@ namespace containers {
 		~array() = default;
 
 		T& operator[](size_t index) { return *(data_.get() + index); }
+		T& at(size_t index) { return *(data_.get()); }
+		T& front() { return *(data_.get()); }
+		T& back() { return *(data_.get()); }
+		bool empty() { return false; }
+		void fill(T value) {}
 		size_t size() { return size_; }
 
 	private:
