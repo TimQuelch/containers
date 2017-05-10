@@ -120,8 +120,13 @@ namespace containers {
 			}
 		}
 
+		void merge(list<T> other) {}
+		void reverse() {}
+		void unique() {}
+		void sort() {}
 		T& front() { return *(front_->data_); }
 		T& back() { return *(back_->data_); }
+		bool empty() { return true; }
 		size_t size() { return size_; }
 
 	private:
