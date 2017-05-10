@@ -41,7 +41,7 @@ namespace containers {
 
 		void push_front(const T& val) {
 			std::shared_ptr<node> new_node{std::make_shared<node>()};
-			new_node->data_ = std::make_shared<T>(val);
+			new_node->data_ = std::make_unique<T>(val);
 			if (front_ != nullptr) {
 				std::shared_ptr<node> old_front{front_};
 				front_->prev_ = new_node;
@@ -56,7 +56,7 @@ namespace containers {
 
 		void push_back(const T& val) {
 			std::shared_ptr<node> new_node{std::make_shared<node>()};
-			new_node->data_ = std::make_shared(val);
+			new_node->data_ = std::make_unique<T>(val);
 			if (back_ != nullptr) {
 				std::shared_ptr<node> old_back{front_};
 				back_->next_ = new_node;
@@ -72,7 +72,7 @@ namespace containers {
 		void insert(const T& val, const T& before) {
 			std::shared_ptr<node> current{front_};
 			std::shared_ptr<node> new_node{std::make_shared<node>()};
-			new_node->data_ = std::make_shared<T>(val);
+			new_node->data_ = std::make_unique<T>(val);
 			while (current != nullptr && *(current->data_) != val) {
 				current = current->next_;
 			}
@@ -87,7 +87,7 @@ namespace containers {
 		void insert_after(const T& val, const T& after) {
 			std::shared_ptr<node> current{back_};
 			std::shared_ptr<node> new_node{std::make_shared<node>()};
-			new_node->data_ = std::make_shared<T>(val);
+			new_node->data_ = std::make_unique<T>(val);
 			while (current != nullptr && *(current->data_) != val) {
 				current = current->prev_;
 			}
