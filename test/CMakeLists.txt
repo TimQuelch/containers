@@ -19,3 +19,4 @@ function(add_boost_test SOURCE_FILE_NAME)
 endfunction()
 
 add_boost_test(array_test.cpp)
+add_boost_test(list_test.cpp)
