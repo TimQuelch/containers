@@ -7,20 +7,25 @@
 namespace containers {
 	template <class T> class list {
 	public:
+		list()
+		    : front_{nullptr}
+		    , back_{nullptr}
+		    , size_{0} {}
+
 		list(const list& other) {
-			std::shared_ptr<node> current(other.m_front);
-			while (current->m_next != nullptr) {
-				push_back(*(current->m_data));
-				current = current->m_next;
+			std::shared_ptr<node> current{other.front_};
+			while (current->next_ != nullptr) {
+				push_back(*(current->data_));
+				current = current->next_;
 			}
 		}
 
 		list(list&& other)
-		    : m_front(std::move(other.m_front))
-		    , m_back(std::move(other.m_back))
-		    , m_size(std::move(other.m_size)) {
-			other.m_front = nullptr;
-			other.m_back = nullptr;
+		    : front_{std::move(other.front_)}
+		    , back_{std::move(other.back_)}
+		    , size_{std::move(other.size_)} {
+			other.front_ = nullptr;
+			other.back_ = nullptr;
 		}
 
 		list& operator=(list other) {
@@ -29,106 +34,106 @@ namespace containers {
 		}
 
 		void clear() {
-			m_front = nullptr;
-			m_back = nullptr;
-			m_size = 0;
+			front_ = nullptr;
+			back_ = nullptr;
+			size_ = 0;
 		}
 
 		void push_front(const T& val) {
-			std::shared_ptr<node> new_node(new node());
-			new_node->m_data(new T(val));
-			if (m_front != nullptr) {
-				std::shared_ptr<node> old_front(m_front);
-				m_front->m_prev = new_node;
-				m_front = new_node;
-				m_front->m_next = old_front;
+			std::shared_ptr<node> new_node{std::make_shared<node>()};
+			new_node->data_ = std::make_shared<T>(val);
+			if (front_ != nullptr) {
+				std::shared_ptr<node> old_front{front_};
+				front_->prev_ = new_node;
+				front_ = new_node;
+				front_->next_ = old_front;
 			} else {
-				m_front = new_node;
-				m_back = new_node;
+				front_ = new_node;
+				back_ = new_node;
 			}
-			m_size++;
+			size_++;
 		}
 
 		void push_back(const T& val) {
-			std::shared_ptr<node> new_node(new node());
-			new_node->m_data(new T(val));
-			if (m_back != nullptr) {
-				std::shared_ptr<node> old_back(m_front);
-				m_back->m_next = new_node;
-				m_back = new_node;
-				m_back->m_prev = old_front;
+			std::shared_ptr<node> new_node{std::make_shared<node>()};
+			new_node->data_ = std::make_shared(val);
+			if (back_ != nullptr) {
+				std::shared_ptr<node> old_back{front_};
+				back_->next_ = new_node;
+				back_ = new_node;
+				back_->prev_ = old_back;
 			} else {
-				m_front = new_node;
-				m_back = new_node;
+				front_ = new_node;
+				back_ = new_node;
 			}
-			m_size++;
+			size_++;
 		}
 
 		void insert(const T& val, const T& before) {
-			std::shared_ptr<node> current(m_front);
-			std::shared_ptr<node> new_node(new node());
-			new_node->m_data(new T(val));
-			while (current != nullptr && *(current->m_data) != val) {
-				current = current->m_next;
+			std::shared_ptr<node> current{front_};
+			std::shared_ptr<node> new_node{std::make_shared<node>()};
+			new_node->data_ = std::make_shared<T>(val);
+			while (current != nullptr && *(current->data_) != val) {
+				current = current->next_;
 			}
 			if (current != nullptr) {
-				new_node->m_prev = current->m_prev;
-				new_node->m_next = current;
-				current->m_prev->m_next = new_node;
-				current->m_prev = new_node;
+				new_node->prev_ = current->prev_;
+				new_node->next_ = current;
+				current->prev_->next_ = new_node;
+				current->prev_ = new_node;
 			}
 		}
 
 		void insert_after(const T& val, const T& after) {
-			std::shared_ptr<node> current(m_back);
-			std::shared_ptr<node> new_node(new node());
-			new_node->m_data(new T(val));
-			while (current != nullptr && *(current->m_data) != val) {
-				current = current->m_prev;
+			std::shared_ptr<node> current{back_};
+			std::shared_ptr<node> new_node{std::make_shared<node>()};
+			new_node->data_ = std::make_shared<T>(val);
+			while (current != nullptr && *(current->data_) != val) {
+				current = current->prev_;
 			}
 			if (current != nullptr) {
-				new_node->m_next = current->m_next;
-				new_node->m_prev = current;
-				current->m_next->m_prev = new_node;
-				current->m_next = new_node;
+				new_node->next_ = current->next_;
+				new_node->prev_ = current;
+				current->next_->prev_ = new_node;
+				current->next_ = new_node;
 			}
 		}
 
 		void pop_front() {
-			m_front = m_front->m_next;
-			m_size--;
+			front_ = front_->next_;
+			size_--;
 		}
 
 		void pop_back() {
-			m_back = m_back->m_prev;
-			m_size--;
+			back_ = back_->prev_;
+			size_--;
 		}
 
 		void remove(const T& val) {
-			std::shared_ptr<node> current(m_front);
+			std::shared_ptr<node> current{front_};
 			while (current != nullptr) {
-				if (*(current->m_data) == val) {
-					current->m_prev->m_next = current->m_next;
-					current->m_next->m_prev = current->m_prev;
-					m_size--;
+				if (*(current->data_) == val) {
+					current->prev_->next_ = current->next_;
+					current->next_->prev_ = current->prev_;
+					size_--;
 				}
 			}
 		}
 
-		T& front() { return *(m_front->m_data); }
-		T& back() { return *(m_back->m_data); }
-		size_t size() { return m_size; }
+		T& front() { return *(front_->data_); }
+		T& back() { return *(back_->data_); }
+		size_t size() { return size_; }
 
 	private:
 		struct node {
-			std::shared_ptr<node> m_prev;
-			std::shared_ptr<node> m_next;
-			std::unique_ptr<T> m_data;
+			std::shared_ptr<node> prev_;
+			std::shared_ptr<node> next_;
+			std::unique_ptr<T> data_;
 		};
 
-		std::shared_ptr<node> m_front;
-		std::shared_ptr<node> m_back;
-		size_t m_size;
+		std::shared_ptr<node> front_;
+		std::shared_ptr<node> back_;
+		size_t size_;
 	};
 }
 
