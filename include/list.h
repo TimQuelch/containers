@@ -7,6 +7,59 @@
 namespace containers {
 	template <class T> class list {
 	public:
+		class iterator {
+			struct node;
+
+		public:
+			iterator()
+			    : ptr_{nullptr} {}
+			iterator(const std::shared_ptr<node>& ptr)
+			    : ptr_{ptr} {}
+			iterator(const iterator& other)
+			    : ptr_{other.ptr_} {}
+
+			iterator(iterator&& other)
+			    : ptr_{std::move(other.ptr_)} {
+				other.ptr_ = nullptr;
+			}
+
+			iterator& operator=(iterator other) {
+				std::swap(*this, other);
+				return *this;
+			}
+
+			~iterator() = default;
+			T& operator*() { return *(ptr_->data_); }
+
+			iterator& operator++() {
+				ptr_ = ptr_->next_;
+				return *this;
+			}
+
+			iterator operator++(int) {
+				iterator tmp{*this};
+				operator++();
+				return tmp;
+			}
+
+			iterator& operator--() {
+				ptr_ = ptr_->prev_;
+				return *this;
+			}
+
+			iterator operator--(int) {
+				iterator tmp{*this};
+				operator--();
+				return tmp;
+			}
+
+			bool operator==(const iterator& other) { return true; }
+			bool operator!=(const iterator& other) { return true; }
+
+		private:
+			std::shared_ptr<node> ptr_;
+		};
+
 		list()
 		    : front_{nullptr}
 		    , back_{nullptr}
